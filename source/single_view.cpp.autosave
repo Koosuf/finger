@@ -1,0 +1,30 @@
+#include "single_view.h"
+#include <QFileInfo>
+
+
+SingleView::SingleView(QWidget *parent) : QWidget(parent)
+{
+
+}
+
+SingleView::SingleView(QString img_name)
+{
+    QFileInfo check_file(img_name);
+    if(!check_file.exists() || !check_file.isFile())
+        img_name = "../resource/default.png";
+    this->create_view();
+}
+
+
+SingleView::~SingleView()
+{
+    if(!ori_img)
+        delete ori_img;
+    if(!proc_img)
+        delete proc_img;
+}
+
+SingleView::create_view()
+{
+    
+}
