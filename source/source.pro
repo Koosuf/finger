@@ -14,7 +14,9 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    single_view.cpp
+    single_view.cpp \
+    qt_test.cpp
 
 HEADERS  += mainwindow.h \
-    single_view.h
+    single_view.h \
+    qt_test.h
