@@ -13,18 +13,10 @@ class SingleView : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SingleView(QWidget *parent = 0);
      ~SingleView();
     explicit SingleView(QString img_name);
 
-    void create_view();
-    void set_mainwindow_pointer(QMainWindow *pointer);
-
-
-
 private:
-
-    QMainWindow *mainwindow;
     QGridLayout *main_layout;
     QLabel *img_lable;
 
@@ -32,10 +24,14 @@ private:
     QImage *proc_img;
     QPushButton *quit_button;
     QPushButton *proc_button;
+    QPushButton *open_button;
 
-signals:
+    void create_view();
 
 public slots:
+    void open_Act(void);
+    void quit_Act(void);
+    void proc_Act(void);
 };
 
 #endif // SINGLEVIEW_H

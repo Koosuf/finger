@@ -17,6 +17,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void reorder_views(QObject* pointer = Q_NULLPTR);
 
 private:
     void setup(void);

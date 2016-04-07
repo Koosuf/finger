@@ -14,7 +14,7 @@ QtTest::QtTest()
 
 void QtTest::run()
 {
-    //list_test();
+    list_test();
     dir_test();
 }
 
@@ -27,6 +27,8 @@ void QtTest::list_test()
     integerlist.append(num);
     cout<<"First: "<<integerlist.at(0)<<endl;
     cout<<"Last: "<<integerlist.at(1)<<endl;
+    integerlist.removeOne(100);
+    cout<<"Now: "<<integerlist.first()<<endl;
 }
 
 void QtTest::dir_test()

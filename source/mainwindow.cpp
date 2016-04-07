@@ -2,6 +2,7 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QDebug>
+#include <QApplication>
 
 
 
@@ -47,6 +48,7 @@ void MainWindow::setup()
     view_layout = new QGridLayout(views);
 
     SingleView *single_view = new SingleView("default.png");
+    connect(single_view,&SingleView::destroyed,this,&MainWindow::reorder_views);
     view_list.append(single_view);
     view_layout->addWidget(single_view,0,0);
 
@@ -80,19 +82,41 @@ void MainWindow::create_actions()
 void MainWindow::new_Act()
 {
     int count = view_list.count();
-    if(count >= 16)
+    if(count >= 9)
     {
         QMessageBox::information(this,tr("提示"),tr("最多显示16幅图片"),QMessageBox::Ok);
         return;
     }
 
     SingleView *single_view = new SingleView("default.png");
+    connect(single_view,&SingleView::destroyed,this,&MainWindow::reorder_views);
     view_list.append(single_view);
-    view_layout->addWidget(single_view,count/4,count%4);
+    view_layout->addWidget(single_view,count/3,count%3);
 }
 
 void MainWindow::exit_Act()
 {
     close();
+}
+
+void MainWindow::reorder_views(QObject* pointer)
+{
+    qDebug()<<"Here is Receiver: "<<pointer;
+    view_list.removeOne((SingleView*)pointer);
+    view_layout->removeWidget((SingleView*)pointer);
+    ((SingleView*)pointer)->close();
+
+
+    int count = 0;
+    foreach(SingleView* view, view_list)
+    {
+        view_layout->removeWidget(view);
+        view_layout->addWidget(view,count/3,count%3);
+        count++;
+    }
+    view_layout->activate();
+    if(view_list.count() == 0)
+        close();
+    setFixedSize(sizeHint());
 }
 
