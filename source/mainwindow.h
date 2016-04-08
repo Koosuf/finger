@@ -9,6 +9,7 @@
 #include <QAction>
 
 #include "single_view.h"
+#include "proc_settings.h"
 
 class MainWindow : public QMainWindow
 {

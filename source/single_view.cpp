@@ -10,7 +10,7 @@ SingleView::SingleView(QString img_name)
 {
     QFileInfo check_file(img_name);
     if(!check_file.exists() || !check_file.isFile())
-        img_name = "../../../../resource/default.png";
+        img_name = "/Users/taozhigang/Documents/develop/finger/resource/default.png";
     ori_img = new QImage(img_name);
     create_view();
     this->setLayout(main_layout);

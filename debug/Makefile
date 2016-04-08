@@ -51,14 +51,18 @@ OBJECTS_DIR   = ./
 SOURCES       = ../source/main.cpp \
 		../source/mainwindow.cpp \
 		../source/single_view.cpp \
-		../source/qt_test.cpp moc_mainwindow.cpp \
-		moc_single_view.cpp
+		../source/qt_test.cpp \
+		../source/proc_settings.cpp moc_mainwindow.cpp \
+		moc_single_view.cpp \
+		moc_proc_settings.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
 		single_view.o \
 		qt_test.o \
+		proc_settings.o \
 		moc_mainwindow.o \
-		moc_single_view.o
+		moc_single_view.o \
+		moc_proc_settings.o
 DIST          = ../../../../Applications/QT/5.6/clang_64/mkspecs/features/spec_pre.prf \
 		../../../../Applications/QT/5.6/clang_64/mkspecs/qdevice.pri \
 		../../../../Applications/QT/5.6/clang_64/mkspecs/features/device_config.prf \
@@ -195,10 +199,12 @@ DIST          = ../../../../Applications/QT/5.6/clang_64/mkspecs/features/spec_p
 		../../../../Applications/QT/5.6/clang_64/mkspecs/features/lex.prf \
 		../source/source.pro ../source/mainwindow.h \
 		../source/single_view.h \
-		../source/qt_test.h ../source/main.cpp \
+		../source/qt_test.h \
+		../source/proc_settings.h ../source/main.cpp \
 		../source/mainwindow.cpp \
 		../source/single_view.cpp \
-		../source/qt_test.cpp
+		../source/qt_test.cpp \
+		../source/proc_settings.cpp
 QMAKE_TARGET  = source
 DESTDIR       = 
 TARGET        = source.app/Contents/MacOS/source
@@ -517,8 +523,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../source/mainwindow.h ../source/single_view.h ../source/qt_test.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../source/main.cpp ../source/mainwindow.cpp ../source/single_view.cpp ../source/qt_test.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../source/mainwindow.h ../source/single_view.h ../source/qt_test.h ../source/proc_settings.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../source/main.cpp ../source/mainwindow.cpp ../source/single_view.cpp ../source/qt_test.cpp ../source/proc_settings.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -542,9 +548,9 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_single_view.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_single_view.cpp moc_proc_settings.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_single_view.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_single_view.cpp moc_proc_settings.cpp
 moc_mainwindow.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qmainwindow.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QGridLayout \
@@ -553,6 +559,10 @@ moc_mainwindow.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.frame
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QMenu \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qmenu.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QAction \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qaction.h \
 		../source/single_view.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QString \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
@@ -562,6 +572,15 @@ moc_mainwindow.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.frame
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		../source/proc_settings.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLineEdit \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlineedit.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QDialogButtonBox \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qdialogbuttonbox.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QRect \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qrect.h \
 		../source/mainwindow.h
 	/Users/taozhigang/Applications/QT/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/taozhigang/Applications/QT/5.6/clang_64/mkspecs/macx-clang -I/Users/taozhigang/Documents/develop/finger/source -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib ../source/mainwindow.h -o moc_mainwindow.cpp
 
@@ -581,6 +600,23 @@ moc_single_view.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.fram
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qgridlayout.h \
 		../source/single_view.h
 	/Users/taozhigang/Applications/QT/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/taozhigang/Applications/QT/5.6/clang_64/mkspecs/macx-clang -I/Users/taozhigang/Documents/develop/finger/source -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib ../source/single_view.h -o moc_single_view.cpp
+
+moc_proc_settings.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QGridLayout \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qgridlayout.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLineEdit \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlineedit.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QDialogButtonBox \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qdialogbuttonbox.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QRect \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qrect.h \
+		../source/proc_settings.h
+	/Users/taozhigang/Applications/QT/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/taozhigang/Applications/QT/5.6/clang_64/mkspecs/macx-clang -I/Users/taozhigang/Documents/develop/finger/source -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib ../source/proc_settings.h -o moc_proc_settings.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -607,6 +643,10 @@ main.o: ../source/main.cpp ../source/mainwindow.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QMenu \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qmenu.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QAction \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qaction.h \
 		../source/single_view.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QString \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
@@ -616,6 +656,15 @@ main.o: ../source/main.cpp ../source/mainwindow.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		../source/proc_settings.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLineEdit \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlineedit.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QDialogButtonBox \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qdialogbuttonbox.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QRect \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qrect.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
 		../source/qt_test.h
@@ -630,6 +679,10 @@ mainwindow.o: ../source/mainwindow.cpp ../source/mainwindow.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QMenu \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qmenu.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QAction \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qaction.h \
 		../source/single_view.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QString \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
@@ -638,7 +691,24 @@ mainwindow.o: ../source/mainwindow.cpp ../source/mainwindow.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
-		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		../source/proc_settings.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLineEdit \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlineedit.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QDialogButtonBox \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qdialogbuttonbox.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QRect \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qrect.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QMenuBar \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qmenubar.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QMessageBox \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qmessagebox.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QDebug \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../source/mainwindow.cpp
 
 single_view.o: ../source/single_view.cpp ../source/single_view.h \
@@ -659,19 +729,62 @@ single_view.o: ../source/single_view.cpp ../source/single_view.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QFileInfo \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QDialogButtonBox \
-		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qdialogbuttonbox.h
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qdialogbuttonbox.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QFileDialog \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qfiledialog.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QDebug \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o single_view.o ../source/single_view.cpp
 
 qt_test.o: ../source/qt_test.cpp ../source/qt_test.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QList \
-		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QDir \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qdir.h \
+		../source/proc_settings.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QGridLayout \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qgridlayout.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLineEdit \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlineedit.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QDialogButtonBox \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qdialogbuttonbox.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QRect \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qrect.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qt_test.o ../source/qt_test.cpp
+
+proc_settings.o: ../source/proc_settings.cpp ../source/proc_settings.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QGridLayout \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qgridlayout.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLineEdit \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlineedit.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QDialogButtonBox \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qdialogbuttonbox.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QRect \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qrect.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers/QIntValidator \
+		../../../../Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers/qvalidator.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o proc_settings.o ../source/proc_settings.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
 
 moc_single_view.o: moc_single_view.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_single_view.o moc_single_view.cpp
+
+moc_proc_settings.o: moc_proc_settings.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_proc_settings.o moc_proc_settings.cpp
 
 ####### Install
 

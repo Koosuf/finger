@@ -3,6 +3,7 @@
 #include <QDir>
 
 #include <iostream>
+#include "proc_settings.h"
 
 using std::cout;
 using std::endl;
@@ -12,10 +13,17 @@ QtTest::QtTest()
 {
 }
 
+QtTest::~QtTest()
+{
+    if(settings_test)
+        delete settings_test;
+}
+
 void QtTest::run()
 {
-    list_test();
-    dir_test();
+    //list_test();
+    //dir_test();
+    proc_settings_test();
 }
 
 void QtTest::list_test()
@@ -34,4 +42,10 @@ void QtTest::list_test()
 void QtTest::dir_test()
 {
     cout<<QDir::currentPath().toStdString()<<endl;
+}
+
+void QtTest::proc_settings_test()
+{
+    settings_test = new ProcSettings();
+    settings_test->show();
 }

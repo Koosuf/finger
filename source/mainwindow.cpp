@@ -84,7 +84,7 @@ void MainWindow::new_Act()
     int count = view_list.count();
     if(count >= 9)
     {
-        QMessageBox::information(this,tr("提示"),tr("最多显示16幅图片"),QMessageBox::Ok);
+        QMessageBox::information(this,tr("提示"),tr("最多显示9幅图片"),QMessageBox::Ok);
         return;
     }
 
@@ -92,11 +92,14 @@ void MainWindow::new_Act()
     connect(single_view,&SingleView::destroyed,this,&MainWindow::reorder_views);
     view_list.append(single_view);
     view_layout->addWidget(single_view,count/3,count%3);
+
+    view_layout->activate();
+    setFixedSize(sizeHint());
 }
 
 void MainWindow::exit_Act()
 {
-    close();
+    exit(0);
 }
 
 void MainWindow::reorder_views(QObject* pointer)
@@ -116,7 +119,7 @@ void MainWindow::reorder_views(QObject* pointer)
     }
     view_layout->activate();
     if(view_list.count() == 0)
-        close();
+        exit(0);
     setFixedSize(sizeHint());
 }
 
