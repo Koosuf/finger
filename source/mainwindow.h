@@ -45,6 +45,9 @@ private:
 
     ProcSettings *proc_settings;
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private slots:
     void new_Act(void);
     void exit_Act(void);

@@ -16,9 +16,11 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     single_view.cpp \
     qt_test.cpp \
-    proc_settings.cpp
+    proc_settings.cpp \
+    proc.cpp
 
 HEADERS  += mainwindow.h \
     single_view.h \
     qt_test.h \
-    proc_settings.h
+    proc_settings.h \
+    proc.h

@@ -142,5 +142,4 @@ void MainWindow::proc_setting_Act()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     event->accept();
-    qDebug()<<"Haha";
 }

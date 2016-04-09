@@ -5,10 +5,10 @@
 	<key>img_proc.pre_cut.size.height</key>
 	<integer>30</integer>
 	<key>img_proc.pre_cut.size.width</key>
-	<integer>0</integer>
+	<integer>30</integer>
 	<key>img_proc.pre_cut.size.x</key>
-	<integer>0</integer>
+	<integer>10</integer>
 	<key>img_proc.pre_cut.size.y</key>
-	<integer>40</integer>
+	<integer>20</integer>
 </dict>
 </plist>

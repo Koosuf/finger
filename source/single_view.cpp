@@ -24,8 +24,6 @@ SingleView::~SingleView()
         delete ori_img;
     if(proc_img)
         delete proc_img;
-
-    qDebug()<<"Here is Destructor";
 }
 
 void SingleView::create_view()
