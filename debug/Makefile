@@ -15,7 +15,7 @@ CXX           = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefau
 DEFINES       = -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -mmacosx-version-min=10.11 -Wall -W -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -stdlib=libc++ -g -std=gnu++11 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -mmacosx-version-min=10.11 -Wall -W -fPIC $(DEFINES)
-INCPATH       = -I../source -I. -I../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers -I../../../../Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers -I../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/AGL.framework/Headers -I../../../../Applications/QT/5.6/clang_64/mkspecs/macx-clang -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib
+INCPATH       = -I../source -I. -I/usr/local/Cellar/opencv/2.4.12_2/include -I../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers -I../../../../Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers -I../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/OpenGL.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/AGL.framework/Headers -I../../../../Applications/QT/5.6/clang_64/mkspecs/macx-clang -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib
 QMAKE         = /Users/taozhigang/Applications/QT/5.6/clang_64/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -36,7 +36,7 @@ DISTNAME      = source1.0.0
 DISTDIR = /Users/taozhigang/Documents/develop/finger/debug/.tmp/source1.0.0
 LINK          = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
 LFLAGS        = -headerpad_max_install_names -stdlib=libc++ -Wl,-syslibroot,/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -mmacosx-version-min=10.11 -Wl,-rpath,/Users/taozhigang/Applications/QT/5.6/clang_64/lib
-LIBS          = $(SUBLIBS) -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib -framework QtWidgets -framework QtGui -framework QtCore -framework OpenGL -framework AGL 
+LIBS          = $(SUBLIBS) -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib -L/usr/local/Cellar/opencv/2.4.12_2/lib -lopencv_calib3d -lopencv_contrib -lopencv_core -lopencv_features2d -lopencv_flann -lopencv_gpu -lopencv_highgui -lopencv_imgproc -lopencv_legacy -lopencv_ml -lopencv_nonfree -lopencv_objdetect -lopencv_ocl -lopencv_photo -lopencv_stitching -lopencv_superres -lopencv_ts -lopencv_video -lopencv_videostab -framework QtWidgets -framework QtGui -framework QtCore -framework OpenGL -framework AGL 
 AR            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cq
 RANLIB        = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -s
 SED           = sed
@@ -52,7 +52,8 @@ SOURCES       = ../source/main.cpp \
 		../source/mainwindow.cpp \
 		../source/single_view.cpp \
 		../source/qt_test.cpp \
-		../source/proc_settings.cpp moc_mainwindow.cpp \
+		../source/proc_settings.cpp \
+		../source/proc.cpp moc_mainwindow.cpp \
 		moc_single_view.cpp \
 		moc_proc_settings.cpp
 OBJECTS       = main.o \
@@ -60,6 +61,7 @@ OBJECTS       = main.o \
 		single_view.o \
 		qt_test.o \
 		proc_settings.o \
+		proc.o \
 		moc_mainwindow.o \
 		moc_single_view.o \
 		moc_proc_settings.o
@@ -200,11 +202,13 @@ DIST          = ../../../../Applications/QT/5.6/clang_64/mkspecs/features/spec_p
 		../source/source.pro ../source/mainwindow.h \
 		../source/single_view.h \
 		../source/qt_test.h \
-		../source/proc_settings.h ../source/main.cpp \
+		../source/proc_settings.h \
+		../source/proc.h ../source/main.cpp \
 		../source/mainwindow.cpp \
 		../source/single_view.cpp \
 		../source/qt_test.cpp \
-		../source/proc_settings.cpp
+		../source/proc_settings.cpp \
+		../source/proc.cpp
 QMAKE_TARGET  = source
 DESTDIR       = 
 TARGET        = source.app/Contents/MacOS/source
@@ -523,8 +527,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../source/mainwindow.h ../source/single_view.h ../source/qt_test.h ../source/proc_settings.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../source/main.cpp ../source/mainwindow.cpp ../source/single_view.cpp ../source/qt_test.cpp ../source/proc_settings.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../source/mainwindow.h ../source/single_view.h ../source/qt_test.h ../source/proc_settings.h ../source/proc.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../source/main.cpp ../source/mainwindow.cpp ../source/single_view.cpp ../source/qt_test.cpp ../source/proc_settings.cpp ../source/proc.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -572,6 +576,34 @@ moc_mainwindow.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.frame
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/opencv.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/core_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/types_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/core.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/version.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/operations.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/mat.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/miniflann.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/defines.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/config.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/imgproc_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/types_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/imgproc.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/photo/photo.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/photo/photo_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/video.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/tracking.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/background_segm.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/features2d/features2d.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/objdetect/objdetect.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/calib3d/calib3d.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/affine.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/ml/ml.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/highgui/highgui_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/highgui/highgui.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/contrib.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/retina.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/openfabmap.hpp \
 		../source/proc_settings.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h \
@@ -582,7 +614,7 @@ moc_mainwindow.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.frame
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QRect \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qrect.h \
 		../source/mainwindow.h
-	/Users/taozhigang/Applications/QT/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/taozhigang/Applications/QT/5.6/clang_64/mkspecs/macx-clang -I/Users/taozhigang/Documents/develop/finger/source -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib ../source/mainwindow.h -o moc_mainwindow.cpp
+	/Users/taozhigang/Applications/QT/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/taozhigang/Applications/QT/5.6/clang_64/mkspecs/macx-clang -I/Users/taozhigang/Documents/develop/finger/source -I/usr/local/Cellar/opencv/2.4.12_2/include -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib ../source/mainwindow.h -o moc_mainwindow.cpp
 
 moc_single_view.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
@@ -598,8 +630,36 @@ moc_single_view.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.fram
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QGridLayout \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qgridlayout.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/opencv.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/core_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/types_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/core.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/version.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/operations.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/mat.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/miniflann.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/defines.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/config.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/imgproc_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/types_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/imgproc.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/photo/photo.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/photo/photo_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/video.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/tracking.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/background_segm.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/features2d/features2d.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/objdetect/objdetect.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/calib3d/calib3d.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/affine.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/ml/ml.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/highgui/highgui_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/highgui/highgui.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/contrib.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/retina.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/openfabmap.hpp \
 		../source/single_view.h
-	/Users/taozhigang/Applications/QT/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/taozhigang/Applications/QT/5.6/clang_64/mkspecs/macx-clang -I/Users/taozhigang/Documents/develop/finger/source -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib ../source/single_view.h -o moc_single_view.cpp
+	/Users/taozhigang/Applications/QT/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/taozhigang/Applications/QT/5.6/clang_64/mkspecs/macx-clang -I/Users/taozhigang/Documents/develop/finger/source -I/usr/local/Cellar/opencv/2.4.12_2/include -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib ../source/single_view.h -o moc_single_view.cpp
 
 moc_proc_settings.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
@@ -615,8 +675,10 @@ moc_proc_settings.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.fr
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qdialogbuttonbox.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QRect \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qrect.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
 		../source/proc_settings.h
-	/Users/taozhigang/Applications/QT/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/taozhigang/Applications/QT/5.6/clang_64/mkspecs/macx-clang -I/Users/taozhigang/Documents/develop/finger/source -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib ../source/proc_settings.h -o moc_proc_settings.cpp
+	/Users/taozhigang/Applications/QT/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/taozhigang/Applications/QT/5.6/clang_64/mkspecs/macx-clang -I/Users/taozhigang/Documents/develop/finger/source -I/usr/local/Cellar/opencv/2.4.12_2/include -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib ../source/proc_settings.h -o moc_proc_settings.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -656,6 +718,34 @@ main.o: ../source/main.cpp ../source/mainwindow.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/opencv.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/core_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/types_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/core.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/version.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/operations.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/mat.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/miniflann.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/defines.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/config.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/imgproc_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/types_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/imgproc.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/photo/photo.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/photo/photo_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/video.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/tracking.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/background_segm.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/features2d/features2d.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/objdetect/objdetect.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/calib3d/calib3d.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/affine.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/ml/ml.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/highgui/highgui_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/highgui/highgui.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/contrib.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/retina.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/openfabmap.hpp \
 		../source/proc_settings.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h \
@@ -692,6 +782,34 @@ mainwindow.o: ../source/mainwindow.cpp ../source/mainwindow.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QLabel \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/opencv.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/core_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/types_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/core.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/version.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/operations.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/mat.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/miniflann.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/defines.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/config.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/imgproc_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/types_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/imgproc.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/photo/photo.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/photo/photo_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/video.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/tracking.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/background_segm.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/features2d/features2d.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/objdetect/objdetect.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/calib3d/calib3d.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/affine.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/ml/ml.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/highgui/highgui_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/highgui/highgui.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/contrib.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/retina.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/openfabmap.hpp \
 		../source/proc_settings.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h \
@@ -708,7 +826,9 @@ mainwindow.o: ../source/mainwindow.cpp ../source/mainwindow.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QDebug \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QApplication \
-		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qapplication.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers/QCloseEvent \
+		../../../../Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers/qevent.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../source/mainwindow.cpp
 
 single_view.o: ../source/single_view.cpp ../source/single_view.h \
@@ -726,6 +846,34 @@ single_view.o: ../source/single_view.cpp ../source/single_view.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qlabel.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QGridLayout \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qgridlayout.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/opencv.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/core_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/types_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/core.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/version.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/operations.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/mat.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/miniflann.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/defines.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/config.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/imgproc_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/types_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/imgproc.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/photo/photo.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/photo/photo_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/video.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/tracking.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/background_segm.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/features2d/features2d.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/objdetect/objdetect.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/calib3d/calib3d.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/affine.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/ml/ml.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/highgui/highgui_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/highgui/highgui.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/contrib.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/retina.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/openfabmap.hpp \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QFileInfo \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QDialogButtonBox \
@@ -737,10 +885,6 @@ single_view.o: ../source/single_view.cpp ../source/single_view.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o single_view.o ../source/single_view.cpp
 
 qt_test.o: ../source/qt_test.cpp ../source/qt_test.h \
-		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QList \
-		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
-		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QDir \
-		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qdir.h \
 		../source/proc_settings.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QWidget \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qwidget.h \
@@ -755,7 +899,13 @@ qt_test.o: ../source/qt_test.cpp ../source/qt_test.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QDialogButtonBox \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qdialogbuttonbox.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QRect \
-		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qrect.h
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qrect.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QList \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qlist.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QDir \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qdir.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qt_test.o ../source/qt_test.cpp
 
 proc_settings.o: ../source/proc_settings.cpp ../source/proc_settings.h \
@@ -773,9 +923,46 @@ proc_settings.o: ../source/proc_settings.cpp ../source/proc_settings.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qdialogbuttonbox.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QRect \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qrect.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QPushButton \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qpushbutton.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers/QIntValidator \
-		../../../../Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers/qvalidator.h
+		../../../../Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers/qvalidator.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QDebug \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o proc_settings.o ../source/proc_settings.cpp
+
+proc.o: ../source/proc.cpp ../source/proc.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/opencv.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/core_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/types_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/core.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/version.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/operations.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/mat.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/miniflann.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/defines.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/flann/config.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/imgproc_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/types_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/imgproc/imgproc.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/photo/photo.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/photo/photo_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/video.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/tracking.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/video/background_segm.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/features2d/features2d.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/objdetect/objdetect.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/calib3d/calib3d.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/core/affine.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/ml/ml.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/highgui/highgui_c.h \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/highgui/highgui.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/contrib.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/retina.hpp \
+		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/openfabmap.hpp \
+		../../../../Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers/QImage \
+		../../../../Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers/qimage.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o proc.o ../source/proc.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp

@@ -8,6 +8,10 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QGridLayout>
+#include <opencv2/opencv.hpp>
+#include <proc.h>
+
+using cv::Mat;
 
 class SingleView : public QWidget
 {
@@ -26,7 +30,10 @@ private:
     QPushButton *proc_button;
     QPushButton *open_button;
 
+    Proc *proc;
+
     void create_view();
+    void set_params();
 
 public slots:
     void open_Act(void);

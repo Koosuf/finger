@@ -4,6 +4,7 @@
 /* This class has nothind to do with qt */
 
 #include <opencv2/opencv.hpp>
+#include <QImage>
 
 #include <iostream>
 
@@ -15,23 +16,28 @@ using namespace cv;
 class Proc
 {
 public:
-    Proc(string filename);
+    Proc(QImage img);
     ~Proc();
 
     struct Params{
         Rect size;
     };
 
-    bool run(Mat &img);
-    void reset_img(String filename);
+    bool run(QImage **img);
+    void reset_img(QImage *img);
     void setParams(struct Params remote_params);
     struct Params params;
+
+    //tools
+    QImage mat_to_qimage(Mat img);
+    Mat qimage_to_mat(QImage img);
 
 private:
     Mat src_img;
     bool hasInit = false;
 
     Mat pre_cut(Mat img);
+    Mat take_finger(Mat img);
 };
 
 #endif // PROC_H
