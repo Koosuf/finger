@@ -23,7 +23,7 @@ void QtTest::run()
 {
     //list_test();
     //dir_test();
-    proc_settings_test();
+    //proc_settings_test();
 }
 
 void QtTest::list_test()

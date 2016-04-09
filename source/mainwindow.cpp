@@ -19,12 +19,14 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    /*
     //delete layout
     if(view_layout)
         delete view_layout;
-
+    */
     //delete views
     qDeleteAll(view_list.begin(), view_list.end());
+
 
     //delete menus
     if(file_menu)
@@ -39,6 +41,10 @@ MainWindow::~MainWindow()
         delete new_act;
     if(exit_act)
         delete exit_act;
+
+    //delete dialog
+    if(proc_settings)
+        delete proc_settings;
 }
 
 
@@ -65,18 +71,24 @@ void MainWindow::create_menus()
     file_menu->addAction(exit_act);
 
     setting_menu = menuBar()->addMenu(tr("&Setings"));
+    setting_menu->addAction(proc_setting_act);
+
+
     about_menu = menuBar()->addMenu(tr("&About"));
 }
 
 void MainWindow::create_actions()
 {
-    exit_act = new QAction(tr("&Close"),this);
+    exit_act = new QAction(tr("&关闭"),this);
     exit_act->setShortcut(QKeySequence::Close);
     connect(exit_act,SIGNAL(triggered(bool)),this,SLOT(exit_Act()));
 
-    new_act = new QAction(tr("&New"),this);
+    new_act = new QAction(tr("&新建"),this);
     new_act->setShortcut(QKeySequence::New);
     connect(new_act,SIGNAL(triggered(bool)),this,SLOT(new_Act()));
+
+    proc_setting_act = new QAction(tr("&处理"),this);
+    connect(proc_setting_act,SIGNAL(triggered(bool)),this,SLOT(proc_setting_Act()));
 }
 
 void MainWindow::new_Act()
@@ -121,5 +133,11 @@ void MainWindow::reorder_views(QObject* pointer)
     if(view_list.count() == 0)
         exit(0);
     setFixedSize(sizeHint());
+}
+
+void MainWindow::proc_setting_Act()
+{
+    proc_settings = new ProcSettings();
+    proc_settings->show();
 }
 

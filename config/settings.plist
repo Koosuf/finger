@@ -9,6 +9,6 @@
 	<key>img_proc.pre_cut.size.x</key>
 	<integer>0</integer>
 	<key>img_proc.pre_cut.size.y</key>
-	<integer>0</integer>
+	<integer>40</integer>
 </dict>
 </plist>

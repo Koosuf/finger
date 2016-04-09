@@ -8,7 +8,6 @@ ProcSettings::ProcSettings(QWidget *parent) : QWidget(parent)
     update_from_file();
     create_view();
     setLayout(&main_layout);
-    show();
 }
 
 void ProcSettings::load()

@@ -40,9 +40,15 @@ private:
     QAction *new_act;
     QAction *exit_act;
 
+    /* actions for setting menu */
+    QAction *proc_setting_act;
+
+    ProcSettings *proc_settings;
+
 private slots:
     void new_Act(void);
     void exit_Act(void);
+    void proc_setting_Act(void);
 };
 
 #endif // MAINWINDOW_H
