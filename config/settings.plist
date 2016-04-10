@@ -3,12 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>img_proc.pre_cut.size.height</key>
-	<integer>140</integer>
+	<integer>150</integer>
 	<key>img_proc.pre_cut.size.width</key>
-	<integer>280</integer>
+	<integer>300</integer>
 	<key>img_proc.pre_cut.size.x</key>
 	<integer>0</integer>
 	<key>img_proc.pre_cut.size.y</key>
-	<integer>50</integer>
+	<integer>60</integer>
 </dict>
 </plist>

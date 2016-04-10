@@ -32,7 +32,10 @@ bool Proc::run(QImage **img)
         *img = NULL;
     }
 
-    *img = new QImage(mat_to_qimage(pre_cut(src_img)));
+    Mat cut_img = pre_cut(src_img);
+    Mat finger_img = take_finger(cut_img);
+
+    *img = new QImage(mat_to_qimage(finger_img));
     return true;
 }
 
@@ -43,7 +46,37 @@ Mat Proc::pre_cut(Mat img)
 
 Mat Proc::take_finger(Mat img)
 {
+    Mat thed,tmp;
+    threshold(img,tmp,0,128,CV_THRESH_BINARY | CV_THRESH_OTSU);
+    tmp.convertTo(thed,CV_8U);
 
+    for(int i=0; i<thed.rows; i++)
+    {
+        if(countNonZero(thed.row(i))*1.0/thed.cols < 0.2)
+        {
+            std::memset((void*)thed.ptr(i),0,thed.cols);
+        }
+    }
+
+    Mat dist;
+    distanceTransform(thed,dist,CV_DIST_C,3);
+    threshold(dist,dist,20,255,CV_THRESH_BINARY);
+
+    double min_val,max_val;
+    Point min_pos, max_pos;
+    minMaxLoc(dist, &min_val, &max_val, &min_pos, &max_pos);
+    floodFill(thed,max_pos,255);
+    threshold(thed,thed,200,255, CV_THRESH_BINARY);
+
+    int morph_size = 3;
+    Mat element = getStructuringElement(MORPH_ELLIPSE,Size(2*morph_size+1, 2*morph_size+1),Point(morph_size,morph_size));
+
+    morphologyEx(thed,thed,MORPH_DILATE,element);
+
+    Mat rest;
+    bitwise_and(img,thed,rest);
+
+    return rest;
 }
 
 
