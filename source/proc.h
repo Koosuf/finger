@@ -21,6 +21,9 @@ public:
 
     struct Params{
         Rect size;
+        int hessian_up_thresh;
+        int hessian_down_thresh;
+        int hessian_kernel_size;
     };
 
     bool run(QImage **img);
@@ -38,6 +41,7 @@ private:
 
     Mat pre_cut(Mat img);
     Mat take_finger(Mat img);
+    Mat finger_enhance(Mat img);
 };
 
 #endif // PROC_H

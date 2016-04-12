@@ -21,6 +21,9 @@ public:
 
     struct Settings{
         QRect pre_cut_size;
+        int enhanced_hessian_up_thresh;
+        int enhanced_hessian_down_thresh;
+        int enhanced_hessian_kernel_size;
     }settings;
 
     struct input_dialog{
@@ -49,6 +52,14 @@ private:
         QLabel title;
         struct input_dialog tag_x, tag_y, tag_dx, tag_dy;
     }pre_cut_dialog;
+
+    //for finger enhance
+    void create_finger_enhance_dialog(void);
+    QGridLayout finger_enhance_layout;
+    struct FingerEnhanceDialog{
+        QLabel title;
+        struct input_dialog up_thresh, down_thresh, kernerl_size;
+    }finger_enhance_dialog;
 
     QDialogButtonBox ret_box;
 

@@ -34,8 +34,9 @@ bool Proc::run(QImage **img)
 
     Mat cut_img = pre_cut(src_img);
     Mat finger_img = take_finger(cut_img);
+    Mat finger_enhanced_img = finger_enhance(finger_img);
 
-    *img = new QImage(mat_to_qimage(finger_img));
+    *img = new QImage(mat_to_qimage(finger_enhanced_img));
     return true;
 }
 
@@ -47,8 +48,19 @@ Mat Proc::pre_cut(Mat img)
 Mat Proc::take_finger(Mat img)
 {
     Mat thed,tmp;
-    threshold(img,tmp,0,128,CV_THRESH_BINARY | CV_THRESH_OTSU);
+    GaussianBlur(img,tmp,Size(7,7),0,0);
+    threshold(tmp,tmp,0,128,CV_THRESH_BINARY | CV_THRESH_OTSU);
     tmp.convertTo(thed,CV_8U);
+
+
+    Mat dist;
+    distanceTransform(thed,dist,CV_DIST_C,3);
+
+    double min_val,max_val;
+    Point min_pos, max_pos;
+    minMaxLoc(dist, &min_val, &max_val, &min_pos, &max_pos);
+    floodFill(thed,max_pos,255);
+    threshold(thed,thed,200,255, CV_THRESH_BINARY);
 
     for(int i=0; i<thed.rows; i++)
     {
@@ -58,25 +70,66 @@ Mat Proc::take_finger(Mat img)
         }
     }
 
-    Mat dist;
-    distanceTransform(thed,dist,CV_DIST_C,3);
-    threshold(dist,dist,20,255,CV_THRESH_BINARY);
-
-    double min_val,max_val;
-    Point min_pos, max_pos;
-    minMaxLoc(dist, &min_val, &max_val, &min_pos, &max_pos);
-    floodFill(thed,max_pos,255);
-    threshold(thed,thed,200,255, CV_THRESH_BINARY);
-
     int morph_size = 3;
     Mat element = getStructuringElement(MORPH_ELLIPSE,Size(2*morph_size+1, 2*morph_size+1),Point(morph_size,morph_size));
 
-    morphologyEx(thed,thed,MORPH_DILATE,element);
+    morphologyEx(thed,thed,MORPH_CLOSE,element,Point(-1,-1),3);
 
     Mat rest;
     bitwise_and(img,thed,rest);
 
-    return rest;
+
+    Mat points;
+    findNonZero(rest,points);
+    return rest(boundingRect(points));
+}
+
+Mat Proc::finger_enhance(Mat img)
+{
+    medianBlur(img,img,3);
+    GaussianBlur(img,img,Size(5,5),0);
+    equalizeHist(img,img);
+
+    //calculate hession matrix
+    Mat grad_xx, grad_yy, grad_xy, grad_x, grad_y;
+    Scharr(img, grad_x,  CV_32F, 1, 0, params.hessian_kernel_size);
+    Scharr(img, grad_y, CV_32F, 0, 1, params.hessian_kernel_size);
+    Scharr(grad_x, grad_xx, CV_32F, 1, 0, params.hessian_kernel_size);
+    Scharr(grad_y, grad_yy, CV_32F, 0, 1, params.hessian_kernel_size);
+    Scharr(grad_x, grad_xy, CV_32F, 0, 1, params.hessian_kernel_size);
+
+    Mat tmp;
+    tmp = grad_xx.mul(grad_xx) + 4*grad_xy.mul(grad_xy) + grad_yy.mul(grad_yy) - 2*grad_xx.mul(grad_yy);
+    cv::sqrt(abs(tmp),tmp);
+
+
+    tmp = grad_xx + grad_yy + tmp;
+
+    Mat vein;
+    threshold(tmp,vein, params.hessian_down_thresh, 255, CV_THRESH_BINARY);
+    vein.convertTo(vein,CV_8U);
+
+
+    Mat mask;
+    threshold(tmp, mask, params.hessian_up_thresh, 255, CV_THRESH_BINARY);
+    mask.convertTo(mask,CV_8U);
+
+    int morph_size = 2;
+    Mat element = getStructuringElement(MORPH_ELLIPSE,Size(2*morph_size+1, 2*morph_size+1),Point(morph_size,morph_size));
+    morphologyEx(mask,mask,MORPH_DILATE,element,Point(-1,-1),1);
+    bitwise_not(mask,mask);
+
+    Mat rest;
+    bitwise_and(vein,mask,rest);
+
+    Mat dist;
+    distanceTransform(rest,dist,CV_DIST_L2,3);
+
+    dist.convertTo(dist,CV_8U);
+    normalize(dist, dist, 0, 255, NORM_MINMAX);
+
+
+    return dist;
 }
 
 

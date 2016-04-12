@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>img_proc.finger_enhance.hessian.down_thresh</key>
+	<integer>20000</integer>
+	<key>img_proc.finger_enhance.hessian.kernel_size</key>
+	<integer>5</integer>
+	<key>img_proc.finger_enhance.hessian.up_thresh</key>
+	<integer>700000</integer>
 	<key>img_proc.pre_cut.size.height</key>
 	<integer>150</integer>
 	<key>img_proc.pre_cut.size.width</key>

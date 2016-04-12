@@ -113,6 +113,10 @@ void SingleView::set_params()
     params.size.width = settings.value("img_proc/pre_cut/size/width", ori_img->width()).toInt();
     params.size.height = settings.value("img_proc/pre_cut/size/height",ori_img->height()).toInt();
 
+    params.hessian_up_thresh = settings.value("img_proc/finger_enhance/hessian/up_thresh",20000).toInt();
+    params.hessian_down_thresh =settings.value("img_proc/finger_enhance/hessian/down_thresh",100).toInt();
+    params.hessian_kernel_size = settings.value("img_proc/finger_enhance/hessian/kernel_size",5).toInt();
+
     proc->setParams(params);
 
 }
