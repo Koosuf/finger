@@ -7,9 +7,12 @@
 #include <QWidget>
 #include <QMenu>
 #include <QAction>
+#include <QFileDialog>
 
 #include "single_view.h"
 #include "proc_settings.h"
+#include "opencv2/opencv.hpp"
+#include"opencv2/stitching/stitcher.hpp"
 
 class MainWindow : public QMainWindow
 {
@@ -34,6 +37,7 @@ private:
 
     QMenu *file_menu;
     QMenu *setting_menu;
+    QMenu *test_menu;
     QMenu *about_menu;
 
     /* actions for file_menu */
@@ -42,6 +46,9 @@ private:
 
     /* actions for setting menu */
     QAction *proc_setting_act;
+
+    /* actions for test menu */
+    QAction *image_fusion_act;
 
     ProcSettings *proc_settings;
 
@@ -52,6 +59,7 @@ private slots:
     void new_Act(void);
     void exit_Act(void);
     void proc_setting_Act(void);
+    void image_fusion_Act(void);
 };
 
 #endif // MAINWINDOW_H

@@ -29,6 +29,7 @@ private:
     QPushButton *quit_button;
     QPushButton *proc_button;
     QPushButton *open_button;
+    QPushButton *save_button;
 
     Proc *proc;
 
@@ -39,6 +40,7 @@ public slots:
     void open_Act(void);
     void quit_Act(void);
     void proc_Act(void);
+    void save_Act(void);
 };
 
 #endif // SINGLEVIEW_H

@@ -40,7 +40,7 @@ void SingleView::create_view()
     img_lable = new QLabel(this);
     img_lable->setFixedSize(320,240);
     img_lable->setPixmap(QPixmap::fromImage(*ori_img));
-    main_layout->addWidget(img_lable,0,0,1,3);
+    main_layout->addWidget(img_lable,0,0,1,4);
 
     open_button = new QPushButton(tr("&open"));
     connect(open_button,SIGNAL(clicked(bool)),this,SLOT(open_Act()));
@@ -52,10 +52,17 @@ void SingleView::create_view()
     proc_button->setDefault(true);
     main_layout->addWidget(proc_button,1,1);
 
+
+    save_button = new QPushButton(tr("save"));
+    connect(save_button,SIGNAL(clicked(bool)),this,SLOT(save_Act()));
+    save_button->setDefault(true);
+    main_layout->addWidget(save_button,1,2);
+
     quit_button = new QPushButton(tr("&quit"));
     quit_button->setDefault(true);
     connect(quit_button,SIGNAL(clicked(bool)),this,SLOT(quit_Act()));
-    main_layout->addWidget(quit_button,1,2);
+    main_layout->addWidget(quit_button,1,3);
+
 }
 
 
@@ -96,6 +103,17 @@ void SingleView::proc_Act()
 
     img_lable->setPixmap(QPixmap::fromImage(*proc_img));
 
+}
+
+
+void SingleView::save_Act()
+{
+    if(!proc_img)
+        return;
+    QString filename = QFileDialog::getSaveFileName(this,tr("保存"), "/Users/taozhigang/Documents/develop/finger/result/untitled.png",tr("Images (*.png *.xpm *.jpg)"));
+    if(filename.trimmed().isEmpty())
+        return;
+    proc_img->save(filename);
 }
 
 void SingleView::quit_Act()

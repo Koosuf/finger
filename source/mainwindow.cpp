@@ -69,6 +69,10 @@ void MainWindow::create_menus()
     file_menu->addSeparator();
     file_menu->addAction(exit_act);
 
+    test_menu = menuBar()->addMenu(tr("测试"));
+    test_menu->addAction(image_fusion_act);
+
+
     setting_menu = menuBar()->addMenu(tr("&设置"));
     setting_menu->addAction(proc_setting_act);
 
@@ -88,6 +92,9 @@ void MainWindow::create_actions()
 
     proc_setting_act = new QAction(tr("&图像设置"),this);
     connect(proc_setting_act,SIGNAL(triggered(bool)),this,SLOT(proc_setting_Act()));
+
+    image_fusion_act = new QAction(tr("图像融合"),this);
+    connect(image_fusion_act, SIGNAL(triggered(bool)),this,SLOT(image_fusion_Act()));
 }
 
 void MainWindow::new_Act()
@@ -102,7 +109,7 @@ void MainWindow::new_Act()
     SingleView *single_view = new SingleView("default.png");
     connect(single_view,&SingleView::destroyed,this,&MainWindow::reorder_views);
     view_list.append(single_view);
-    view_layout->addWidget(single_view,count/3,count%3);
+    view_layout->addWidget(single_view,count/2,count%2);
 
     view_layout->activate();
     setFixedSize(sizeHint());
@@ -124,7 +131,7 @@ void MainWindow::reorder_views(QObject* pointer)
     foreach(SingleView* view, view_list)
     {
         view_layout->removeWidget(view);
-        view_layout->addWidget(view,count/3,count%3);
+        view_layout->addWidget(view,count/2,count%2);
         count++;
     }
     view_layout->activate();
@@ -137,6 +144,46 @@ void MainWindow::proc_setting_Act()
 {
     proc_settings = new ProcSettings();
     proc_settings->show();
+}
+
+
+void MainWindow::image_fusion_Act()
+{
+    QStringList images = QFileDialog::getOpenFileNames(this,"选择多张图片","/Users/taozhigang/Documents/develop/finger/result", "Images (*.png *.xpm *.jpg)");
+    if(images.count() <= 2)
+    {
+        int ret = QMessageBox::information(this,tr("提示"),tr("请选择大于两张的图片"),QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
+        if(ret == QMessageBox::Ok)
+            images = QFileDialog::getOpenFileNames(this,"选择多张图片","/Users/taozhigang/Documents/develop/finger/result", "Images (*.png *.xpm *.jpg)");
+        else
+            return;
+    }
+
+    std::vector<Mat>img_list;
+    foreach (QString image, images)
+    {
+        img_list.push_back(cv::imread(image.toStdString(),IMREAD_GRAYSCALE));
+    }
+
+    Mat rest;
+    Stitcher stitcher = Stitcher::createDefault();
+    unsigned long start_time,end_time;
+    start_time = getTickCount();
+
+    Stitcher::Status status = stitcher.stitch(img_list,rest);
+
+    end_time = getTickCount();
+    cout<<"Stither Time: "<<(end_time - start_time)/getTickFrequency()<<endl;
+
+    if(status == Stitcher::OK)
+    {
+        namedWindow("fusion");
+        imshow("fusion",rest);
+    }
+    else
+    {
+        cout<<"Failed"<<endl;
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
