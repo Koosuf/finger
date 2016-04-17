@@ -29,12 +29,14 @@ void ProcSettings::create_view()
 {
     create_pre_cut_dialog();
     create_finger_enhance_dialog();
+    create_proc_vein_dialog();
     main_layout.addLayout(&pre_cut_layout,0,0,3,5);
     main_layout.addLayout(&finger_enhance_layout,3,0,3,5);
+    main_layout.addLayout(&proc_vein_layout,6,0,2,2);
 
     ret_box.addButton(QDialogButtonBox::Ok);
     ret_box.addButton(QDialogButtonBox::Cancel);
-    main_layout.addWidget(&ret_box,6,3,1,2);
+    main_layout.addWidget(&ret_box,8,3,1,2);
     connect(&ret_box,SIGNAL(accepted()),this,SLOT(check_Act()));
     connect(&ret_box,SIGNAL(rejected()),this,SLOT(cancel_Act()));
 }
@@ -70,7 +72,7 @@ void ProcSettings::create_pre_cut_dialog()
 
 void ProcSettings::create_finger_enhance_dialog()
 {
-    finger_enhance_dialog.title.setText(tr("静脉增强"));
+    finger_enhance_dialog.title.setText(tr("静脉提取"));
     finger_enhance_dialog.up_thresh.label.setText(tr("上阈值"));
     finger_enhance_dialog.up_thresh.line.setValidator(new QIntValidator(-1000000,1000000));
     finger_enhance_dialog.up_thresh.line.setText(QVariant(settings.enhanced_hessian_up_thresh).toString());
@@ -92,6 +94,23 @@ void ProcSettings::create_finger_enhance_dialog()
 
 }
 
+
+
+void ProcSettings::create_proc_vein_dialog()
+{
+    proc_vein_dialog.title.setText(tr("静脉修整"));
+    proc_vein_dialog.single_object_size.label.setText(tr("孤立阈值"));
+    proc_vein_dialog.single_object_size.line.setValidator(new QIntValidator(1,1000));
+    proc_vein_dialog.single_object_size.line.setText(QVariant(settings.proc_vein_single_object_size).toString());
+
+    proc_vein_layout.addWidget(&proc_vein_dialog.title, 0, 0);
+    proc_vein_layout.addWidget(&proc_vein_dialog.single_object_size.label,1,0);
+    proc_vein_layout.addWidget(&proc_vein_dialog.single_object_size.line,1,1);
+
+
+}
+
+
 void ProcSettings::update_from_ui()
 {
     settings.pre_cut_size.setX(pre_cut_dialog.tag_x.line.text().toInt());
@@ -102,6 +121,8 @@ void ProcSettings::update_from_ui()
     settings.enhanced_hessian_up_thresh = finger_enhance_dialog.up_thresh.line.text().toInt();
     settings.enhanced_hessian_down_thresh = finger_enhance_dialog.down_thresh.line.text().toInt();
     settings.enhanced_hessian_kernel_size = finger_enhance_dialog.kernerl_size.line.text().toInt();
+
+    settings.proc_vein_single_object_size = proc_vein_dialog.single_object_size.line.text().toInt();
 }
 
 void ProcSettings::update_to_file()
@@ -114,6 +135,8 @@ void ProcSettings::update_to_file()
     configs->setValue("img_proc/finger_enhance/hessian/up_thresh", settings.enhanced_hessian_up_thresh);
     configs->setValue("img_proc/finger_enhance/hessian/down_thresh", settings.enhanced_hessian_down_thresh);
     configs->setValue("img_proc/finger_enhance/hessian/kernel_size",settings.enhanced_hessian_kernel_size);
+
+    configs->setValue("img_proc/proc_vein/filter/single_object_size",settings.proc_vein_single_object_size);
 }
 
 
@@ -128,6 +151,8 @@ void ProcSettings::update_from_file()
     settings.enhanced_hessian_up_thresh = configs->value("img_proc/finger_enhance/hessian/up_thresh",20000).toInt();
     settings.enhanced_hessian_down_thresh = configs->value("img_proc/finger_enhance/hessian/down_thresh",100).toInt();
     settings.enhanced_hessian_kernel_size = configs->value("img_proc/finger_enhance/hessian/kernel_size",3).toInt();
+
+    settings.proc_vein_single_object_size = configs->value("img_proc/proc_vein/filter/single_object_size",50).toInt();
 }
 
 void ProcSettings::check_Act()

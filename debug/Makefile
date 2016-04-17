@@ -177,7 +177,6 @@ DIST          = ../../../../Applications/QT/5.6/clang_64/mkspecs/features/spec_p
 		../../../../Applications/QT/5.6/clang_64/mkspecs/features/qt_config.prf \
 		../../../../Applications/QT/5.6/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../../Applications/QT/5.6/clang_64/mkspecs/features/spec_post.prf \
-		../source/.qmake.stash \
 		../../../../Applications/QT/5.6/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Applications/QT/5.6/clang_64/mkspecs/features/default_pre.prf \
 		../../../../Applications/QT/5.6/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -333,7 +332,6 @@ Makefile: ../source/source.pro ../../../../Applications/QT/5.6/clang_64/mkspecs/
 		../../../../Applications/QT/5.6/clang_64/mkspecs/features/qt_config.prf \
 		../../../../Applications/QT/5.6/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../../Applications/QT/5.6/clang_64/mkspecs/features/spec_post.prf \
-		.qmake.stash \
 		../../../../Applications/QT/5.6/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Applications/QT/5.6/clang_64/mkspecs/features/default_pre.prf \
 		../../../../Applications/QT/5.6/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -472,7 +470,6 @@ Makefile: ../source/source.pro ../../../../Applications/QT/5.6/clang_64/mkspecs/
 ../../../../Applications/QT/5.6/clang_64/mkspecs/features/qt_config.prf:
 ../../../../Applications/QT/5.6/clang_64/mkspecs/macx-clang/qmake.conf:
 ../../../../Applications/QT/5.6/clang_64/mkspecs/features/spec_post.prf:
-.qmake.stash:
 ../../../../Applications/QT/5.6/clang_64/mkspecs/features/exclusive_builds.prf:
 ../../../../Applications/QT/5.6/clang_64/mkspecs/features/default_pre.prf:
 ../../../../Applications/QT/5.6/clang_64/mkspecs/features/mac/default_pre.prf:
@@ -567,6 +564,8 @@ moc_mainwindow.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.frame
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qmenu.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QAction \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qaction.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QFileDialog \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qfiledialog.h \
 		../source/single_view.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QString \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
@@ -604,6 +603,7 @@ moc_mainwindow.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.frame
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/contrib.hpp \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/retina.hpp \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/openfabmap.hpp \
+		../source/proc.h \
 		../source/proc_settings.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h \
@@ -658,6 +658,7 @@ moc_single_view.cpp: ../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.fram
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/contrib.hpp \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/retina.hpp \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/openfabmap.hpp \
+		../source/proc.h \
 		../source/single_view.h
 	/Users/taozhigang/Applications/QT/5.6/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/taozhigang/Applications/QT/5.6/clang_64/mkspecs/macx-clang -I/Users/taozhigang/Documents/develop/finger/source -I/usr/local/Cellar/opencv/2.4.12_2/include -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtGui.framework/Headers -I/Users/taozhigang/Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers -I. -F/Users/taozhigang/Applications/QT/5.6/clang_64/lib ../source/single_view.h -o moc_single_view.cpp
 
@@ -709,6 +710,8 @@ main.o: ../source/main.cpp ../source/mainwindow.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qmenu.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QAction \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qaction.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QFileDialog \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qfiledialog.h \
 		../source/single_view.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QString \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
@@ -746,6 +749,7 @@ main.o: ../source/main.cpp ../source/mainwindow.h \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/contrib.hpp \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/retina.hpp \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/openfabmap.hpp \
+		../source/proc.h \
 		../source/proc_settings.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h \
@@ -773,6 +777,8 @@ mainwindow.o: ../source/mainwindow.cpp ../source/mainwindow.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qmenu.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QAction \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qaction.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QFileDialog \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qfiledialog.h \
 		../source/single_view.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QString \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qstring.h \
@@ -810,6 +816,7 @@ mainwindow.o: ../source/mainwindow.cpp ../source/mainwindow.h \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/contrib.hpp \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/retina.hpp \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/openfabmap.hpp \
+		../source/proc.h \
 		../source/proc_settings.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h \
@@ -874,6 +881,7 @@ single_view.o: ../source/single_view.cpp ../source/single_view.h \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/contrib.hpp \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/retina.hpp \
 		/usr/local/Cellar/opencv/2.4.12_2/include/opencv2/contrib/openfabmap.hpp \
+		../source/proc.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QFileInfo \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qfileinfo.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QDialogButtonBox \
@@ -881,7 +889,11 @@ single_view.o: ../source/single_view.cpp ../source/single_view.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QFileDialog \
 		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qfiledialog.h \
 		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QDebug \
-		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qdebug.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/QMessageBox \
+		../../../../Applications/QT/5.6/clang_64/lib/QtWidgets.framework/Headers/qmessagebox.h \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/QSettings \
+		../../../../Applications/QT/5.6/clang_64/lib/QtCore.framework/Headers/qsettings.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o single_view.o ../source/single_view.cpp
 
 qt_test.o: ../source/qt_test.cpp ../source/qt_test.h \

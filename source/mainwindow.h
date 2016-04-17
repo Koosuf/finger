@@ -12,7 +12,6 @@
 #include "single_view.h"
 #include "proc_settings.h"
 #include "opencv2/opencv.hpp"
-#include"opencv2/stitching/stitcher.hpp"
 
 class MainWindow : public QMainWindow
 {

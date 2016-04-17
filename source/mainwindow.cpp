@@ -106,6 +106,7 @@ void MainWindow::new_Act()
         return;
     }
 
+
     SingleView *single_view = new SingleView("default.png");
     connect(single_view,&SingleView::destroyed,this,&MainWindow::reorder_views);
     view_list.append(single_view);
@@ -128,15 +129,19 @@ void MainWindow::reorder_views(QObject* pointer)
 
 
     int count = 0;
+
     foreach(SingleView* view, view_list)
     {
         view_layout->removeWidget(view);
         view_layout->addWidget(view,count/2,count%2);
         count++;
     }
+
     view_layout->activate();
+
     if(view_list.count() == 0)
         exit(0);
+
     setFixedSize(sizeHint());
 }
 
@@ -150,7 +155,7 @@ void MainWindow::proc_setting_Act()
 void MainWindow::image_fusion_Act()
 {
     QStringList images = QFileDialog::getOpenFileNames(this,"选择多张图片","/Users/taozhigang/Documents/develop/finger/result", "Images (*.png *.xpm *.jpg)");
-    if(images.count() <= 2)
+    while(images.count() < 2)
     {
         int ret = QMessageBox::information(this,tr("提示"),tr("请选择大于两张的图片"),QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
         if(ret == QMessageBox::Ok)
@@ -159,31 +164,24 @@ void MainWindow::image_fusion_Act()
             return;
     }
 
-    std::vector<Mat>img_list;
+    cv::Mat rest = cv::Mat::zeros(80,200,CV_32F);
+
     foreach (QString image, images)
     {
-        img_list.push_back(cv::imread(image.toStdString(),IMREAD_GRAYSCALE));
+        cv::Mat img = cv::imread(image.toStdString(),0);
+        cv::resize(img,img,cv:: Size(200,80));
+        img.convertTo(img,CV_32F);
+        rest = rest + img;
     }
 
-    Mat rest;
-    Stitcher stitcher = Stitcher::createDefault();
-    unsigned long start_time,end_time;
-    start_time = getTickCount();
+    cv::GaussianBlur(rest,rest,cv::Size(5,5),1);
 
-    Stitcher::Status status = stitcher.stitch(img_list,rest);
+    threshold(rest,rest,200,255,CV_THRESH_TOZERO);
 
-    end_time = getTickCount();
-    cout<<"Stither Time: "<<(end_time - start_time)/getTickFrequency()<<endl;
+    rest.convertTo(rest,CV_8U);
 
-    if(status == Stitcher::OK)
-    {
-        namedWindow("fusion");
-        imshow("fusion",rest);
-    }
-    else
-    {
-        cout<<"Failed"<<endl;
-    }
+    cv::namedWindow("fusion");
+    cv::imshow("fusion",rest);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

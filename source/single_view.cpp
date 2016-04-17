@@ -103,6 +103,7 @@ void SingleView::proc_Act()
 
     img_lable->setPixmap(QPixmap::fromImage(*proc_img));
 
+
 }
 
 
@@ -126,6 +127,7 @@ void SingleView::set_params()
     QSettings settings(tr("/Users/taozhigang/Documents/develop/finger/config/settings.plist"),QSettings::NativeFormat);
 
     struct Proc::Params params;
+
     params.size.x = settings.value("img_proc/pre_cut/size/x",0).toInt();
     params.size.y = settings.value("img_proc/pre_cut/size/y",0).toInt();
     params.size.width = settings.value("img_proc/pre_cut/size/width", ori_img->width()).toInt();
@@ -134,6 +136,8 @@ void SingleView::set_params()
     params.hessian_up_thresh = settings.value("img_proc/finger_enhance/hessian/up_thresh",20000).toInt();
     params.hessian_down_thresh =settings.value("img_proc/finger_enhance/hessian/down_thresh",100).toInt();
     params.hessian_kernel_size = settings.value("img_proc/finger_enhance/hessian/kernel_size",5).toInt();
+
+    params.single_object_size = settings.value("img_proc/proc_vein/filter/single_object_size",50).toInt();
 
     proc->setParams(params);
 

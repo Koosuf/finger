@@ -24,6 +24,7 @@ public:
         int enhanced_hessian_up_thresh;
         int enhanced_hessian_down_thresh;
         int enhanced_hessian_kernel_size;
+        int proc_vein_single_object_size;
     }settings;
 
     struct input_dialog{
@@ -60,6 +61,15 @@ private:
         QLabel title;
         struct input_dialog up_thresh, down_thresh, kernerl_size;
     }finger_enhance_dialog;
+
+    //for proc vein
+
+    void create_proc_vein_dialog(void);
+    QGridLayout proc_vein_layout;
+    struct ProcVeinDialog{
+        QLabel title;
+        struct input_dialog single_object_size;
+    }proc_vein_dialog;
 
     QDialogButtonBox ret_box;
 

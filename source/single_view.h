@@ -9,7 +9,7 @@
 #include <QLabel>
 #include <QGridLayout>
 #include <opencv2/opencv.hpp>
-#include <proc.h>
+#include "proc.h"
 
 using cv::Mat;
 

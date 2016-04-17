@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>img_proc.finger_enhance.hessian.down_thresh</key>
-	<integer>20000</integer>
+	<integer>3000</integer>
 	<key>img_proc.finger_enhance.hessian.kernel_size</key>
 	<integer>5</integer>
 	<key>img_proc.finger_enhance.hessian.up_thresh</key>
@@ -16,5 +16,7 @@
 	<integer>0</integer>
 	<key>img_proc.pre_cut.size.y</key>
 	<integer>60</integer>
+	<key>img_proc.proc_vein.filter.single_object_size</key>
+	<integer>50</integer>
 </dict>
 </plist>

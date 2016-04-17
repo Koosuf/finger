@@ -1,4 +1,24 @@
 #include "proc.h"
+#include <stack>
+
+
+s_Point::s_Point(int x, int y)
+{
+    this->x = x;
+    this->y = y;
+}
+
+int s_Point::get_x()
+{
+    return this->x;
+}
+
+int s_Point::get_y()
+{
+    return this->y;
+}
+
+
 
 Proc::Proc(QImage img)
 {
@@ -10,6 +30,7 @@ Proc::~Proc()
 {
 
 }
+
 
 void Proc::reset_img(QImage *img)
 {
@@ -34,9 +55,10 @@ bool Proc::run(QImage **img)
 
     Mat cut_img = pre_cut(src_img);
     Mat finger_img = take_finger(cut_img);
-    Mat finger_enhanced_img = finger_enhance(finger_img);
+    Mat ori_vein = finger_enhance(finger_img);
+    Mat clear_vein = proc_vein(ori_vein);
 
-    *img = new QImage(mat_to_qimage(finger_enhanced_img));
+    *img = new QImage(mat_to_qimage(clear_vein));
     return true;
 }
 
@@ -84,11 +106,74 @@ Mat Proc::take_finger(Mat img)
     return rest(boundingRect(points));
 }
 
+
+Mat Proc::proc_vein(Mat img)
+{
+    Mat rest = Mat::zeros(img.rows, img.cols, CV_8U);
+    Mat tmp = Mat::zeros(img.rows+2, img.cols+2, CV_8U);
+
+    img.copyTo(tmp(Rect(1,1,img.cols,img.rows)));
+
+
+    std::set<int> insp_sets;
+    for(int row=1; row < tmp.rows-1; row++)
+    {
+        for(int col=1; col < tmp.cols-1; col++)
+        {
+            if(!img.at<unsigned char>(row,col))
+                continue;
+            std::set<int> effe_sets;
+            std::stack<s_Point> insp_dock;
+
+            insp_sets.insert(row*tmp.cols +col);
+            insp_dock.push(s_Point(row,col));
+
+            while(insp_dock.size() > 0)
+            {
+                s_Point odot = insp_dock.top();
+                insp_dock.pop();
+                effe_sets.insert(odot.get_x() * tmp.cols + odot.get_y());
+                for(int i=-1; i<=1; i++)
+                {
+                    for(int j=-1; j<=1; j++)
+                    {
+                        if(i | j)
+                        {
+                            s_Point dot(odot.get_x()+i, odot.get_y()+j);
+                            if(insp_sets.find(dot.get_x()*tmp.cols + dot.get_y()) == insp_sets.end())
+                            {
+                                insp_sets.insert(dot.get_x()*tmp.cols + dot.get_y());
+                                if(tmp.at<unsigned char>(dot.get_x(), dot.get_y()) > 0)
+                                {
+                                    insp_dock.push(dot);
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            if(effe_sets.size() > params.single_object_size)
+            {
+                std::set<int>::iterator it;
+                for(it = effe_sets.begin(); it != effe_sets.end(); it++)
+                {
+                    rest.at<unsigned char>(*it/tmp.cols, *it%tmp.cols) = 255;
+                }
+            }
+        }
+    }
+
+    return rest;
+
+}
+
 Mat Proc::finger_enhance(Mat img)
 {
     medianBlur(img,img,3);
     GaussianBlur(img,img,Size(5,5),0);
-    equalizeHist(img,img);
 
     //calculate hession matrix
     Mat grad_xx, grad_yy, grad_xy, grad_x, grad_y;
@@ -102,11 +187,12 @@ Mat Proc::finger_enhance(Mat img)
     tmp = grad_xx.mul(grad_xx) + 4*grad_xy.mul(grad_xy) + grad_yy.mul(grad_yy) - 2*grad_xx.mul(grad_yy);
     cv::sqrt(abs(tmp),tmp);
 
-
     tmp = grad_xx + grad_yy + tmp;
 
     Mat vein;
     threshold(tmp,vein, params.hessian_down_thresh, 255, CV_THRESH_BINARY);
+
+    normalize(vein,vein,0,255,NORM_MINMAX);
     vein.convertTo(vein,CV_8U);
 
 
@@ -125,10 +211,9 @@ Mat Proc::finger_enhance(Mat img)
     Mat dist;
     distanceTransform(rest,dist,CV_DIST_L2,3);
 
+    GaussianBlur(dist,dist,Size(3,3),1);
+    threshold(dist,dist,1.5,255,CV_THRESH_BINARY);
     dist.convertTo(dist,CV_8U);
-    normalize(dist, dist, 0, 255, NORM_MINMAX);
-
-
     return dist;
 }
 
@@ -145,4 +230,5 @@ QImage Proc::mat_to_qimage(Mat img)
     tmp.bits();
     return tmp;
 }
+
 
